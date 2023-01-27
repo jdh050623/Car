@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class CarControll : MonoBehaviour
 {
@@ -11,7 +10,9 @@ public class CarControll : MonoBehaviour
     public WheelJoint2D wheelBack;
     JointMotor2D jMortor;
 
-    public bool FRGear = true;
+    private bool FRGear = true;
+    private bool Rotatable = true;
+    public bool RotateDown;
 
     public float carSpeed = 200f;
     float spd;
@@ -40,6 +41,8 @@ public class CarControll : MonoBehaviour
 
         wheelFront.motor = jMortor;
         wheelBack.motor = jMortor;
+
+        RotateDown = true;
     }
 
     public void PedalUp()
@@ -50,6 +53,8 @@ public class CarControll : MonoBehaviour
         jMortor.maxMotorTorque = 5f;
 
         wheelFront.motor = jMortor;
+
+        RotateDown = false;
     }
 
     public void CarBreak()
@@ -75,20 +80,67 @@ public class CarControll : MonoBehaviour
         }
     }
 
+    public void Rotate()
+    {
+        if (Rotatable && RotateDown)
+        {
+            transform.Rotate(0, 0, Time.deltaTime * -70);
+            Debug.Log("»∏¿¸¡ﬂ");
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            rigid.AddForce(new Vector3(10,0,0), ForceMode2D.Impulse);
+            rigid.AddForce(new Vector3(10,-6,0), ForceMode2D.Impulse);
         }
-    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Land"))
+        if (Input.GetKey(KeyCode.S))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            transform.Rotate(0,0, Time.deltaTime * -70);
+        }
+        Rotate();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("∂•ø° ¥Í∞Ì¿÷æÓ??");
+        if (collision.CompareTag("Land"))
+        {
+            Rotatable = false;
+            Debug.Log("∂•ø° ¥Í∞Ì¿÷æÓ!");
+        }
+
+        if (collision.CompareTag("SpeedUp"))
+        {
+            InvokeRepeating("RepeatSomething", 1, 1);
+            Debug.Log("∫ŒΩ∫≈Õ¡ÿ∫Ò");
 
         }
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log("∂•ø° ∂≥æÓ¡≥æÓ??");
+        if (collision.CompareTag("Land"))
+        {
+            Rotatable = true;
+            Debug.Log("∂•ø° ∂≥æÓ¡≥æÓ!");
+        }
+
+        if (collision.CompareTag("SpeedUp"))
+        {
+            CancelInvoke("RepeatSomething");
+            Debug.Log("≥™∞®");
+
+        }
+    }
+
+    void RepeatSomething()
+    {
+        rigid.AddForce(new Vector3(10, -6, 0), ForceMode2D.Impulse);
+        Debug.Log("∫ŒΩ∫≈Õ ∫ÿ∫ÿ∂Ï");
+    }
+
 }

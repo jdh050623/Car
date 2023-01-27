@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\TargetFallow.cs" />
     <Compile Include="Assets\Script\CarControll.cs" />
+    <Compile Include="Assets\Script\Glass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
