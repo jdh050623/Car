@@ -17,6 +17,9 @@ public class CarControll : MonoBehaviour
     public float carSpeed = 200f;
     float spd;
 
+    public GameObject Camera;
+    public GameObject SpawnPoint;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -85,7 +88,6 @@ public class CarControll : MonoBehaviour
         if (Rotatable && RotateDown)
         {
             transform.Rotate(0, 0, Time.deltaTime * -70);
-            Debug.Log("»∏¿¸¡ﬂ");
         }
     }
 
@@ -105,42 +107,39 @@ public class CarControll : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("∂•ø° ¥Í∞Ì¿÷æÓ??");
         if (collision.CompareTag("Land"))
         {
             Rotatable = false;
-            Debug.Log("∂•ø° ¥Í∞Ì¿÷æÓ!");
         }
 
         if (collision.CompareTag("SpeedUp"))
         {
             InvokeRepeating("RepeatSomething", 1, 1);
-            Debug.Log("∫ŒΩ∫≈Õ¡ÿ∫Ò");
+        }
 
+        if (collision.CompareTag("Moving"))
+        {
+            transform.position = SpawnPoint.transform.position;
+            Camera.transform.position = SpawnPoint.transform.position;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("∂•ø° ∂≥æÓ¡≥æÓ??");
         if (collision.CompareTag("Land"))
         {
             Rotatable = true;
-            Debug.Log("∂•ø° ∂≥æÓ¡≥æÓ!");
         }
 
         if (collision.CompareTag("SpeedUp"))
         {
             CancelInvoke("RepeatSomething");
-            Debug.Log("≥™∞®");
-
         }
     }
 
     void RepeatSomething()
     {
         rigid.AddForce(new Vector3(10, -6, 0), ForceMode2D.Impulse);
-        Debug.Log("∫ŒΩ∫≈Õ ∫ÿ∫ÿ∂Ï");
     }
 
 }
